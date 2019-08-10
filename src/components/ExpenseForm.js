@@ -10,7 +10,8 @@ export default class ExpenseForm extends React.Component {
       note: '',
       amount: '',
       createdAt: moment(),
-      calendarFocused: false
+      calendarFocused: false,
+      error: false
   }
   onDescriptionChange = (e) => {
       const description = e.target.value
@@ -24,20 +25,43 @@ export default class ExpenseForm extends React.Component {
       const amount = e.target.value
 
 // reg ex to only allow digitswith 1 decimal place and only 2 digits after.
-  if(amount.match(/^\d*(\.\d{0,2})?$/)) {
+  if(!amount || amount.match(/^\d{1,}(\.\d{0,2})?$/)) {
           this.setState(() => ({ amount }))
       }
   }
   onDateChange = (createdAt) => {
-      this.setState(()=> ({ createdAt }))
+      if (createdAt) {
+          this.setState(() => ({ createdAt }))
+      }
+      
   }
   onFocusChange = ({ focused }) => {
       this.setState(() => ({ calendarFocused: focused }))
   }
+  onSubmit = (e) => {
+      e.preventDefault()
+
+      if (!this.state.description || !this.state.amount) {
+        this.setState(() => ({error: 'Please provide description and amount'}))
+      } else {
+        this.setState(() => ({error: false }))
+          this.props.onSubmit({
+              description: this.state.description,
+              amount: parseFloat(this.state.amount, 10) * 100,
+              createdAt: this.state.createdAt.valueOf(),
+              note: this.state.note
+          })
+      }
+  }
   render() {
     return (
       <div>
-        <form action="">
+        <form 
+        onSubmit={this.onSubmit}
+        action="">
+
+        {this.state.error && <p>{this.state.error}</p>}
+
           <input
             type="text"
             placeholder="description"
