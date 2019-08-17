@@ -28,11 +28,6 @@ const state = store.getState()
 // visibleExpenses takes 2 arguments, one is expenses and the other is filters, both available from state
 const visibleExpenses = getVisibleExpenses(state.expenses, state.filters)
 
-// setTimeout(() => {
-//     store.dispatch(setTextFilter('bill'))
-// }, 3000);
-
-// console.log(visibleExpenses)
 
 const jsx = (
 
